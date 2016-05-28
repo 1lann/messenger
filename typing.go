@@ -31,10 +31,12 @@ func (s *Session) SetTypingIndicator(thread Thread, typing bool) error {
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
 
-	_, err := s.client.Do(req)
+	resp, err := s.client.Do(req)
 	if err != nil {
 		return err
 	}
+
+	resp.Body.Close()
 
 	return nil
 }

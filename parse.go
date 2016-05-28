@@ -17,9 +17,7 @@ func parseResponse(rd io.Reader) (pullResponse, error) {
 
 	if result.Error == loggedOutError {
 		return pullResponse{}, ErrLoggedOut
-	}
-
-	if result.Error > 0 {
+	} else if result.Error > 0 {
 		return pullResponse{}, ErrUnknown
 	}
 

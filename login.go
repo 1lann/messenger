@@ -94,6 +94,7 @@ func (s *Session) Login(email, password string) error {
 
 	resp, err := s.client.Do(req)
 	if err == nil {
+		resp.Body.Close()
 		return ErrLoginError
 	}
 

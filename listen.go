@@ -36,6 +36,18 @@ type listener struct {
 	processedMutex          *sync.Mutex
 }
 
+// ListenError is the type of error that will always be passed to OnError.
+// It contains information about the operation that caused the error, and the
+// actual underlying error.
+type ListenError struct {
+	Op  string
+	Err error
+}
+
+func (l ListenError) Error() string {
+	return "listen: " + l.Op + ": " + l.Err.Error()
+}
+
 // Listen starts listening for events and messages from Facebook's chat
 // servers and blocks.
 func (s *Session) Listen() {
@@ -73,6 +85,8 @@ func (s *Session) checkListeners() {
 }
 
 // OnMessage sets the handler for when a message is received.
+//
+// Receiving attachments isn't supported yet.
 func (s *Session) OnMessage(handler func(msg *Message)) {
 	s.l.onMessage = handler
 }
@@ -164,7 +178,7 @@ func (s *Session) listenRequest() {
 
 	resp, err := s.client.Do(req)
 	if err != nil {
-		go s.l.onError(err)
+		go s.l.onError(ListenError{"HTTP listen", err})
 		time.Sleep(time.Second)
 		return
 	}
@@ -173,7 +187,7 @@ func (s *Session) listenRequest() {
 
 	respInfo, err := parseResponse(resp.Body)
 	if err != nil {
-		go s.l.onError(err)
+		go s.l.onError(ListenError{"parse listen", err})
 		time.Sleep(time.Second)
 		return
 	}
@@ -183,7 +197,7 @@ func (s *Session) listenRequest() {
 	s.l.form.seq = respInfo.Seq
 
 	if respInfo.Type == "refresh" && respInfo.Reason == 110 {
-		s.l.onError(ErrLoggedOut)
+		go s.l.onError(ListenError{"listen response", ErrLoggedOut})
 		if !s.l.shouldClose {
 			s.l.closed <- true
 			s.l.closeMutex.Lock()
@@ -270,17 +284,18 @@ func (s *Session) fullReload() {
 		form.Set("lastSync", strconv.FormatInt(s.l.lastSync.Unix(), 10))
 		form = s.addFormMeta(form)
 
-		req, _ := http.NewRequest(http.MethodPost, syncURL,
-			strings.NewReader(form.Encode()))
+		req, _ := http.NewRequest(http.MethodGet, syncURL+form.Encode(), nil)
 		req.Header = defaultHeader()
 
 		s.l.lastSync = time.Now()
 
-		_, err := s.client.Do(req)
+		resp, err := s.client.Do(req)
 		if err != nil {
-			s.l.onError(err)
+			s.l.onError(ListenError{"reload sync", err})
 			return
 		}
+
+		resp.Body.Close()
 	}()
 
 	go func() {
@@ -296,11 +311,13 @@ func (s *Session) fullReload() {
 		req, _ := http.NewRequest(http.MethodPost, threadSyncURL,
 			strings.NewReader(form.Encode()))
 
-		_, err := s.client.Do(req)
+		resp, err := s.client.Do(req)
 		if err != nil {
-			s.l.onError(err)
+			s.l.onError(ListenError{"reload thread sync", err})
 			return
 		}
+
+		resp.Body.Close()
 	}()
 
 	wg.Wait()

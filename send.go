@@ -35,10 +35,13 @@ func (s *Session) NewMessageWithThread(thread Thread) *Message {
 
 type sendResponse struct {
 	Payload pullMessage `json:"payload"`
+	Error   int         `json:"error"`
 }
 
 // SendMessage sends the message to the session. Only the Thread, Body and
 // Attachments fields are used for sending.
+//
+// TODO: Sending does not support attachments yet.
 func (s *Session) SendMessage(msg *Message) (string, error) {
 	hasAttachment := "false"
 	if len(msg.Attachments) > 0 {
@@ -103,6 +106,12 @@ func (s *Session) SendMessage(msg *Message) (string, error) {
 	err = unmarshalPullData(resp.Body, &respMsg)
 	if err != nil {
 		return "", err
+	}
+
+	if respMsg.Error == loggedOutError {
+		return "", ErrLoggedOut
+	} else if respMsg.Error > 0 {
+		return "", ErrUnknown
 	}
 
 	if len(respMsg.Payload.Actions) == 0 {
