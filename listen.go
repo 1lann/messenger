@@ -120,12 +120,9 @@ type pullMsgMeta struct {
 }
 
 type pullAction struct {
-	ThreadID       string `json:"thread_fbid"`
-	LogMessageType string `json:"log_message_type"`
-	LogMessageData string `json:"log_message_data"`
-	LogMessageBody string `json:"log_message_body"`
-	Author         string `json:"author"`
-	MessageID      string `json:"message_id"`
+	ThreadID  string `json:"thread_fbid"`
+	Author    string `json:"author"`
+	MessageID string `json:"message_id"`
 }
 
 type pullMessage struct {
