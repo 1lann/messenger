@@ -173,7 +173,7 @@ func (s *Session) listenRequest() {
 		nil)
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		go s.l.onError(ListenError{"HTTP listen", err})
 		time.Sleep(time.Second)
@@ -286,7 +286,7 @@ func (s *Session) fullReload() {
 
 		s.l.lastSync = time.Now()
 
-		resp, err := s.client.Do(req)
+		resp, err := s.doRequest(req)
 		if err != nil {
 			s.l.onError(ListenError{"reload sync", err})
 			return
@@ -308,7 +308,7 @@ func (s *Session) fullReload() {
 		req, _ := http.NewRequest(http.MethodPost, threadSyncURL,
 			strings.NewReader(form.Encode()))
 
-		resp, err := s.client.Do(req)
+		resp, err := s.doRequest(req)
 		if err != nil {
 			s.l.onError(ListenError{"reload thread sync", err})
 			return

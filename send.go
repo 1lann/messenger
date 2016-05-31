@@ -95,7 +95,7 @@ func (s *Session) SendMessage(msg *Message) (string, error) {
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return "", err
 	}

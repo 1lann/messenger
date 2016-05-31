@@ -26,7 +26,7 @@ func (s *Session) createLoginRequest(email, password string) (*http.Request, err
 	req, _ := http.NewRequest(http.MethodGet, facebookURL, nil)
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (s *Session) Login(email, password string) error {
 		return err
 	}
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err == nil {
 		resp.Body.Close()
 		return ErrLoginError

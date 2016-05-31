@@ -15,6 +15,9 @@ type sessionDump struct {
 // Note that if you restore the session, you may not need to login, but you
 // must reconnect to chat.
 func (s *Session) DumpSession() ([]byte, error) {
+	s.requestMutex.RUnlock()
+	defer s.requestMutex.RLock()
+
 	fbCookies := s.client.Jar.Cookies(fbURL)
 	edgeCookies := s.client.Jar.Cookies(edgeURL)
 
@@ -35,6 +38,9 @@ func (s *Session) DumpSession() ([]byte, error) {
 // back into the session. Note that you may not need to login again, but you
 // must reconnect to chat.
 func (s *Session) RestoreSession(data []byte) error {
+	s.requestMutex.Lock()
+	defer s.requestMutex.Unlock()
+
 	buf := bytes.NewReader(data)
 	dec := gob.NewDecoder(buf)
 	restoredSession := sessionDump{}

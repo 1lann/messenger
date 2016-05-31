@@ -32,7 +32,7 @@ func (s *Session) UserProfileInfo(userID string) (UserProfile, error) {
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return UserProfile{}, err
 	}
@@ -75,7 +75,7 @@ func (s *Session) AllUserProfileInfo() (map[string]UserProfile, error) {
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return nil, err
 	}

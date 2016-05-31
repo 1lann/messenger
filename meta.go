@@ -20,7 +20,7 @@ func (s *Session) populateMeta() error {
 	req, _ := http.NewRequest(http.MethodGet, facebookURL, nil)
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return err
 	}

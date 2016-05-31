@@ -91,7 +91,7 @@ func (s *Session) requestReconnect() error {
 	req, _ := http.NewRequest(http.MethodGet, reconnectURL, nil)
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func (s *Session) connectToStage1() error {
 		return err
 	}
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return err
 	}
@@ -179,7 +179,7 @@ func (s *Session) connectToStage2() error {
 	req, _ := http.NewRequest(http.MethodGet, chatURL+s.l.form.encode(), nil)
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return err
 	}
@@ -200,7 +200,7 @@ func (s *Session) connectToStage3() error {
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
 
-	resp, err := s.client.Do(req)
+	resp, err := s.doRequest(req)
 	if err != nil {
 		return err
 	}
