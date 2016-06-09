@@ -81,10 +81,10 @@ func (s *Session) generatePresence() string {
 			Ut:   0,
 			T2:   []int{},
 			Lm2:  nil,
-			Uct2: now.UnixNano() / 1000000,
+			Uct2: now.UnixNano() / 1e6,
 			Tr:   nil,
 			Tw:   largeRandomNumber(),
-			At:   now.UnixNano() / 1000000,
+			At:   now.UnixNano() / 1e6,
 		},
 		Ch: map[string]int{
 			"p_" + s.userID: 0,

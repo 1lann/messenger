@@ -52,7 +52,7 @@ func (s *Session) SendMessage(msg *Message) (string, error) {
 		"client":                                            []string{"mercury"},
 		"message_batch[0][action_type]":                     []string{"ma-type:user-generated-message"},
 		"message_batch[0][author]":                          []string{"fbid:" + s.userID},
-		"message_batch[0][timestamp]":                       []string{strconv.FormatInt(time.Now().UnixNano()/1000000, 10)},
+		"message_batch[0][timestamp]":                       []string{strconv.FormatInt(time.Now().UnixNano()/1e6, 10)},
 		"message_batch[0][timestamp_absolute]":              []string{"Today"},
 		"message_batch[0][timestamp_relative]":              []string{time.Now().Format("15:04")},
 		"message_batch[0][timestamp_time_passed]":           []string{"0"},
@@ -134,7 +134,7 @@ func generateOfflineThreadID() string {
 		random = random[:22]
 	}
 
-	now := strconv.FormatInt(time.Now().UnixNano()/1000000, 2)
+	now := strconv.FormatInt(time.Now().UnixNano()/1e6, 2)
 	n, err := strconv.ParseInt(now+random, 2, 64)
 	if err != nil {
 		// If this happens, it's the end of the world.
@@ -145,7 +145,7 @@ func generateOfflineThreadID() string {
 }
 
 func (s *Session) generateThreadID() string {
-	now := strconv.FormatInt(time.Now().UnixNano()/1000000, 10)
+	now := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 	r := strconv.FormatInt(largeRandomNumber(), 10)
 	return "<" + now + ":" + r + "-" + s.clientID + "@mail.projektitan.com>"
 }

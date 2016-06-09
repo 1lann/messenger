@@ -33,7 +33,7 @@ type accessibilityStruct struct {
 }
 
 func generateAccessibilityCookie() string {
-	now := time.Now().UnixNano() / 1000000
+	now := time.Now().UnixNano() / 1e6
 
 	access := accessibilityStruct{
 		Sr:    0,

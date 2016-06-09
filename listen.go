@@ -303,7 +303,7 @@ func (s *Session) fullReload() {
 		form.Set("client", "mercury")
 		form.Set("folders[0]", "inbox")
 		form.Set("last_action_timestamp",
-			strconv.FormatInt(time.Now().Unix(), 10))
+			strconv.FormatInt((time.Now().UnixNano()/1e6)-60, 10))
 		form = s.addFormMeta(form)
 
 		req, _ := http.NewRequest(http.MethodPost, threadSyncURL,
