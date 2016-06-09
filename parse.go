@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
+	"os"
 )
 
 func parseResponse(rd io.Reader) (pullResponse, error) {
@@ -28,6 +30,10 @@ func unmarshalPullData(rd io.Reader, to interface{}) error {
 	data, err := ioutil.ReadAll(rd)
 	if err != nil {
 		return err
+	}
+
+	if os.Getenv("MDEBUG") == "true" {
+		log.Println("debug response: " + string(data))
 	}
 
 	startPos := bytes.IndexByte(data, '{')
