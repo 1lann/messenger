@@ -18,7 +18,7 @@ const (
 	readStatusURL  = "https://www.facebook.com/ajax/mercury/change_read_status.php"
 	sendMessageURL = "https://www.facebook.com/ajax/mercury/send_messages.php"
 	typingURL      = "https://www.facebook.com/ajax/messaging/typ.php"
-	syncURL        = "https://www.facebook.com/notifications/sync?"
+	syncURL        = "https://www.facebook.com/notifications/sync/?"
 	profileURL     = "https://www.facebook.com/chat/user_info/"
 	allProfileURL  = "https://www.facebook.com/chat/user_info_all"
 	userAgent      = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"

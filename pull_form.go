@@ -34,7 +34,7 @@ func (s *Session) newPullForm() pullForm {
 	}
 }
 
-func (p pullForm) encode() string {
+func (p pullForm) form() url.Values {
 	form := url.Values{
 		"channel":    []string{"p_" + p.userID},
 		"seq":        []string{strconv.Itoa(p.seq)},
@@ -53,5 +53,5 @@ func (p pullForm) encode() string {
 		form.Set("sticky_pool", p.stickyPool)
 	}
 
-	return form.Encode()
+	return form
 }

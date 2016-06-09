@@ -169,14 +169,16 @@ func (s *Session) createStage1Request() (*http.Request, error) {
 
 	form := s.newPullForm()
 
-	req, _ := http.NewRequest(http.MethodGet, chatURL+form.encode(), nil)
+	req, _ := http.NewRequest(http.MethodGet,
+		chatURL+form.form().Encode(), nil)
 	req.Header = defaultHeader()
 
 	return req, nil
 }
 
 func (s *Session) connectToStage2() error {
-	req, _ := http.NewRequest(http.MethodGet, chatURL+s.l.form.encode(), nil)
+	req, _ := http.NewRequest(http.MethodGet,
+		chatURL+s.l.form.form().Encode(), nil)
 	req.Header = defaultHeader()
 
 	resp, err := s.doRequest(req)

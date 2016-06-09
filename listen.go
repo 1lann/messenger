@@ -171,7 +171,7 @@ func (s *Session) listenRequest() {
 	})
 	s.client.Jar.SetCookies(fbURL, cookies)
 
-	req, _ := http.NewRequest(http.MethodGet, chatURL+s.l.form.encode(),
+	req, _ := http.NewRequest(http.MethodGet, chatURL+s.l.form.form().Encode(),
 		nil)
 	req.Header = defaultHeader()
 
@@ -279,12 +279,7 @@ func (s *Session) handleDeltaMessage(body string, meta pullMsgMeta) {
 }
 
 func (s *Session) fullReload() {
-	wg := new(sync.WaitGroup)
-
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-
+	func() {
 		form := make(url.Values)
 		form.Set("lastSync", strconv.FormatInt(s.l.lastSync.Unix(), 10))
 		form = s.addFormMeta(form)
@@ -292,25 +287,23 @@ func (s *Session) fullReload() {
 		req, _ := http.NewRequest(http.MethodGet, syncURL+form.Encode(), nil)
 		req.Header = defaultHeader()
 
-		s.l.lastSync = time.Now()
-
 		resp, err := s.doRequest(req)
 		if err != nil {
 			s.l.onError(ListenError{"reload sync", err})
 			return
 		}
 
+		s.l.lastSync = time.Now()
+
 		resp.Body.Close()
 	}()
 
-	go func() {
-		defer wg.Done()
-
+	func() {
 		form := make(url.Values)
 		form.Set("client", "mercury")
 		form.Set("folders[0]", "inbox")
 		form.Set("last_action_timestamp",
-			strconv.FormatInt(time.Now().Unix()-60, 10))
+			strconv.FormatInt(time.Now().Unix(), 10))
 		form = s.addFormMeta(form)
 
 		req, _ := http.NewRequest(http.MethodPost, threadSyncURL,
@@ -324,6 +317,4 @@ func (s *Session) fullReload() {
 
 		resp.Body.Close()
 	}()
-
-	wg.Wait()
 }
