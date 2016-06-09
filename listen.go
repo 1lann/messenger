@@ -3,8 +3,10 @@ package messenger
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -205,7 +207,13 @@ func (s *Session) listenRequest() {
 	}
 
 	if respInfo.Type == "fullReload" {
-		s.fullReload()
+		if os.Getenv("MDEBUG") == "true" {
+			log.Println("debug start full reload")
+			s.fullReload()
+			log.Println("debug end full reload")
+		} else {
+			s.fullReload()
+		}
 
 		return
 	}
