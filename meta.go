@@ -32,6 +32,11 @@ func (s *Session) populateMeta() error {
 		return err
 	}
 
+	if bytes.Contains(data,
+		[]byte(`<h2 id="security_check_header">Security check</h2>`)) {
+		return ErrLoginCheckpoint
+	}
+
 	s.meta.dtsg, err = searchBetween(data, "name=\"fb_dtsg\" value=\"", '"')
 	if err != nil {
 		return err
