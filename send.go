@@ -39,7 +39,7 @@ type sendResponse struct {
 }
 
 // SendMessage sends the message to the session. Only the Thread, Body and
-// Attachments fields are used for sending.
+// Attachments fields are used for sending. The message ID and error is returned.
 //
 // TODO: Sending does not support attachments yet.
 func (s *Session) SendMessage(msg *Message) (string, error) {

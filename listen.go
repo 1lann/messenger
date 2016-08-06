@@ -32,6 +32,7 @@ type listener struct {
 
 	onMessage func(msg *Message)
 	onRead    func(thread Thread, userID string)
+	onTyping  func(thread Thread, userID string, typing bool)
 	onError   func(err error)
 
 	processedThreadMessages map[string][]string
@@ -84,6 +85,10 @@ func (s *Session) checkListeners() {
 	if s.l.onRead == nil {
 		s.l.onRead = func(thread Thread, userID string) {}
 	}
+
+	if s.l.onTyping == nil {
+		s.l.onTyping = func(thread Thread, userID string, typing bool) {}
+	}
 }
 
 // OnMessage sets the handler for when a message is received.
@@ -101,6 +106,11 @@ func (s *Session) OnRead(handler func(thread Thread, userID string)) {
 // OnError sets the handler for when an error during listening occurs.
 func (s *Session) OnError(handler func(err error)) {
 	s.l.onError = handler
+}
+
+// OnTyping sets the handler when someone starts typing.
+func (s *Session) OnTyping(handler func(thread Thread, userID string, typing bool)) {
+	s.l.onTyping = handler
 }
 
 // Close stops and returns all listeners on the session.
@@ -238,8 +248,9 @@ func (s *Session) processPull(resp pullResponse) {
 			s.handleDeltaMessage(msg.Delta.Body, msg.Delta.Metadata)
 		} else if msg.Type == "messaging" {
 			if msg.Event == "read_receipt" {
+				from := strconv.FormatInt(msg.Reader, 10)
 				thread := Thread{
-					ThreadID: strconv.FormatInt(msg.Reader, 10),
+					ThreadID: from,
 					IsGroup:  false,
 				}
 				if msg.ThreadID != 0 {
@@ -247,8 +258,20 @@ func (s *Session) processPull(resp pullResponse) {
 					thread.IsGroup = true
 				}
 
-				go s.l.onRead(thread, strconv.FormatInt(msg.Reader, 10))
+				go s.l.onRead(thread, from)
 			}
+		} else if msg.Type == "typ" {
+			from := strconv.FormatInt(msg.From, 10)
+			thread := Thread{
+				ThreadID: from,
+				IsGroup:  false,
+			}
+			if msg.ThreadID != 0 {
+				thread.ThreadID = strconv.FormatInt(msg.ThreadID, 10)
+				thread.IsGroup = true
+			}
+
+			go s.l.onTyping(thread, from, msg.St > 0)
 		}
 	}
 }

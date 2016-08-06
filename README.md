@@ -5,5 +5,8 @@
 A Go (golang) package that allows you to interact with Facebook chat/Messenger using
 an unofficial API ported from [github.com/Schmavery/facebook-chat-api](https://github.com/Schmavery/facebook-chat-api).
 
+## Usage
+See the [/examples](/examples) directory for example usage.
+
 ## License
 messenger is licensed under the MIT license which can be found [here](/LICENSE).
