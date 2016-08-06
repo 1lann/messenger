@@ -108,7 +108,7 @@ func (s *Session) OnError(handler func(err error)) {
 	s.l.onError = handler
 }
 
-// OnTyping sets the handler when someone starts typing.
+// OnTyping sets the handler when someone starts or stops typing.
 func (s *Session) OnTyping(handler func(thread Thread, userID string, typing bool)) {
 	s.l.onTyping = handler
 }
