@@ -49,44 +49,44 @@ func (s *Session) SendMessage(msg *Message) (string, error) {
 	}
 
 	form := url.Values{
-		"client":                                            []string{"mercury"},
-		"message_batch[0][action_type]":                     []string{"ma-type:user-generated-message"},
-		"message_batch[0][author]":                          []string{"fbid:" + s.userID},
-		"message_batch[0][timestamp]":                       []string{strconv.FormatInt(time.Now().UnixNano()/1e6, 10)},
-		"message_batch[0][timestamp_absolute]":              []string{"Today"},
-		"message_batch[0][timestamp_relative]":              []string{time.Now().Format("15:04")},
-		"message_batch[0][timestamp_time_passed]":           []string{"0"},
-		"message_batch[0][is_unread]":                       []string{"false"},
-		"message_batch[0][is_cleared]":                      []string{"false"},
-		"message_batch[0][is_forward]":                      []string{"false"},
-		"message_batch[0][is_filtered_content]":             []string{"false"},
-		"message_batch[0][is_filtered_content_bh]":          []string{"false"},
-		"message_batch[0][is_filtered_content_account]":     []string{"false"},
-		"message_batch[0][is_filtered_content_quasar]":      []string{"false"},
-		"message_batch[0][is_filtered_content_invalid_app]": []string{"false"},
-		"message_batch[0][is_spoof_warning]":                []string{"false"},
-		"message_batch[0][source]":                          []string{"source:chat:web"},
-		"message_batch[0][source_tags][0]":                  []string{"source:chat"},
-		"message_batch[0][body]":                            []string{msg.Body},
-		"message_batch[0][html_body]":                       []string{"false"},
-		"message_batch[0][ui_push_phase]":                   []string{"V3"},
-		"message_batch[0][status]":                          []string{"0"},
-		"message_batch[0][offline_threading_id]":            []string{msg.offlineThreadID},
-		"message_batch[0][message_id]":                      []string{msg.offlineThreadID},
-		"message_batch[0][threading_id]":                    []string{s.generateThreadID()},
-		"message_batch[0][ephemeral_ttl_mode]:":             []string{"0"},
-		"message_batch[0][manual_retry_cnt]":                []string{"0"},
-		"message_batch[0][has_attachment]":                  []string{hasAttachment},
-		"message_batch[0][signatureID]":                     []string{generateSignatureID()},
+		"client":                          []string{"mercury"},
+		"action_type":                     []string{"ma-type:user-generated-message"},
+		"author":                          []string{"fbid:" + s.userID},
+		"timestamp":                       []string{strconv.FormatInt(time.Now().UnixNano()/1e6, 10)},
+		"timestamp_absolute":              []string{"Today"},
+		"timestamp_relative":              []string{time.Now().Format("15:04")},
+		"timestamp_time_passed":           []string{"0"},
+		"is_unread":                       []string{"false"},
+		"is_cleared":                      []string{"false"},
+		"is_forward":                      []string{"false"},
+		"is_filtered_content":             []string{"false"},
+		"is_filtered_content_bh":          []string{"false"},
+		"is_filtered_content_account":     []string{"false"},
+		"is_filtered_content_quasar":      []string{"false"},
+		"is_filtered_content_invalid_app": []string{"false"},
+		"is_spoof_warning":                []string{"false"},
+		"source":                          []string{"source:chat:web"},
+		"source_tags[0]":                  []string{"source:chat"},
+		"body":                            []string{msg.Body},
+		"html_body":                       []string{"false"},
+		"ui_push_phase":                   []string{"V3"},
+		"status":                          []string{"0"},
+		"offline_threading_id":            []string{msg.offlineThreadID},
+		"message_id":                      []string{msg.offlineThreadID},
+		"threading_id":                    []string{s.generateThreadID()},
+		"ephemeral_ttl_mode:":             []string{"0"},
+		"manual_retry_cnt":                []string{"0"},
+		"has_attachment":                  []string{hasAttachment},
+		"signatureID":                     []string{generateSignatureID()},
 	}
 
 	if msg.Thread.IsGroup {
-		form.Set("message_batch[0][thread_fbid]", msg.Thread.ThreadID)
+		form.Set("thread_fbid", msg.Thread.ThreadID)
 	} else {
-		form.Set("message_batch[0][specific_to_list][0]", "fbid:"+
+		form.Set("specific_to_list[0]", "fbid:"+
 			msg.Thread.ThreadID)
-		form.Set("message_batch[0][specific_to_list][1]", "fbid:"+s.userID)
-		form.Set("message_batch[0][other_user_fbid]", msg.Thread.ThreadID)
+		form.Set("specific_to_list[1]", "fbid:"+s.userID)
+		form.Set("other_user_fbid", msg.Thread.ThreadID)
 	}
 
 	form = s.addFormMeta(form)

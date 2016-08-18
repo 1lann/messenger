@@ -16,7 +16,7 @@ const (
 	threadSyncURL  = "https://www.facebook.com/ajax/mercury/thread_sync.php"
 	reconnectURL   = "https://www.facebook.com/ajax/presence/reconnect.php?reason=6"
 	readStatusURL  = "https://www.facebook.com/ajax/mercury/change_read_status.php"
-	sendMessageURL = "https://www.facebook.com/ajax/mercury/send_messages.php"
+	sendMessageURL = "https://www.facebook.com/messaging/send/"
 	typingURL      = "https://www.facebook.com/ajax/messaging/typ.php"
 	syncURL        = "https://www.facebook.com/notifications/sync/?"
 	profileURL     = "https://www.facebook.com/chat/user_info/"
