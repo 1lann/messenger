@@ -9,10 +9,6 @@ import (
 // SetTypingIndicator sets the typing indicator seen by members of the
 // thread.
 func (s *Session) SetTypingIndicator(thread Thread, typing bool) error {
-	if true {
-		return nil
-	}
-
 	form := make(url.Values)
 
 	form.Set("source", "mercury-chat")
@@ -34,6 +30,7 @@ func (s *Session) SetTypingIndicator(thread Thread, typing bool) error {
 	req, _ := http.NewRequest(http.MethodPost, typingURL,
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
+	req.Header.Set("Content-Type", formURLEncoded)
 
 	resp, err := s.doRequest(req)
 	if err != nil {
