@@ -33,7 +33,11 @@ func unmarshalPullData(rd io.Reader, to interface{}) error {
 	}
 
 	if os.Getenv("MDEBUG") == "true" {
-		log.Println("debug response: " + string(data))
+		if len(data) > 10000 {
+			log.Println("debug response size:", len(data))
+		} else {
+			log.Println("debug response: " + string(data))
+		}
 	}
 
 	startPos := bytes.IndexByte(data, '{')

@@ -49,35 +49,35 @@ func (s *Session) SendMessage(msg *Message) (string, error) {
 	}
 
 	form := url.Values{
-		"client":                          []string{"mercury"},
-		"action_type":                     []string{"ma-type:user-generated-message"},
-		"author":                          []string{"fbid:" + s.userID},
-		"timestamp":                       []string{strconv.FormatInt(time.Now().UnixNano()/1e6, 10)},
-		"timestamp_absolute":              []string{"Today"},
-		"timestamp_relative":              []string{time.Now().Format("15:04")},
-		"timestamp_time_passed":           []string{"0"},
-		"is_unread":                       []string{"false"},
-		"is_cleared":                      []string{"false"},
-		"is_forward":                      []string{"false"},
-		"is_filtered_content":             []string{"false"},
-		"is_filtered_content_bh":          []string{"false"},
-		"is_filtered_content_account":     []string{"false"},
-		"is_filtered_content_quasar":      []string{"false"},
-		"is_filtered_content_invalid_app": []string{"false"},
-		"is_spoof_warning":                []string{"false"},
-		"source":                          []string{"source:chat:web"},
-		"source_tags[0]":                  []string{"source:chat"},
-		"body":                            []string{msg.Body},
-		"html_body":                       []string{"false"},
-		"ui_push_phase":                   []string{"V3"},
-		"status":                          []string{"0"},
-		"offline_threading_id":            []string{msg.offlineThreadID},
-		"message_id":                      []string{msg.offlineThreadID},
-		"threading_id":                    []string{s.generateThreadID()},
-		"ephemeral_ttl_mode:":             []string{"0"},
-		"manual_retry_cnt":                []string{"0"},
-		"has_attachment":                  []string{hasAttachment},
-		"signatureID":                     []string{generateSignatureID()},
+		"client":      []string{"mercury"},
+		"action_type": []string{"ma-type:user-generated-message"},
+		// "author":                []string{"fbid:" + s.userID},
+		"timestamp": []string{strconv.FormatInt(time.Now().UnixNano()/1e6, 10)},
+		// "timestamp_absolute":    []string{"Today"},
+		// "timestamp_relative":    []string{time.Now().Format("15:04")},
+		// "timestamp_time_passed": []string{"0"},
+		// "is_unread":                       []string{"false"},
+		// "is_cleared":                      []string{"false"},
+		// "is_forward":                      []string{"false"},
+		// "is_filtered_content":             []string{"false"},
+		// "is_filtered_content_bh":          []string{"false"},
+		// "is_filtered_content_account":     []string{"false"},
+		// "is_filtered_content_quasar":      []string{"false"},
+		// "is_filtered_content_invalid_app": []string{"false"},
+		// "is_spoof_warning":                []string{"false"},
+		"source":               []string{"source:messenger:web"},
+		"tags[0]":              []string{"web:trigger:function (){return i(m)}"},
+		"body":                 []string{msg.Body},
+		"html_body":            []string{"false"},
+		"ui_push_phase":        []string{"C3"},
+		"status":               []string{"0"},
+		"offline_threading_id": []string{msg.offlineThreadID},
+		"message_id":           []string{msg.offlineThreadID},
+		"threading_id":         []string{s.generateThreadID()},
+		"ephemeral_ttl_mode:":  []string{"0"},
+		"manual_retry_cnt":     []string{"0"},
+		"has_attachment":       []string{hasAttachment},
+		"signature_id":         []string{generateSignatureID()},
 	}
 
 	if msg.Thread.IsGroup {
@@ -94,6 +94,7 @@ func (s *Session) SendMessage(msg *Message) (string, error) {
 	req, _ := http.NewRequest(http.MethodPost, sendMessageURL,
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
+	req.Header.Set("Content-Type", formURLEncoded)
 
 	resp, err := s.doRequest(req)
 	if err != nil {

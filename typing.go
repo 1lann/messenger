@@ -9,6 +9,10 @@ import (
 // SetTypingIndicator sets the typing indicator seen by members of the
 // thread.
 func (s *Session) SetTypingIndicator(thread Thread, typing bool) error {
+	if true {
+		return nil
+	}
+
 	form := make(url.Values)
 
 	form.Set("source", "mercury-chat")

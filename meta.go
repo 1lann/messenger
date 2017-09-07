@@ -81,6 +81,8 @@ func (s *Session) addFormMeta(form url.Values) url.Values {
 	s.meta.req++
 	form.Set("__rev", s.meta.revision)
 	form.Set("__a", "1")
+	form.Set("__af", "h0")
+	form.Set("__be", "-1")
 	form.Set("fb_dtsg", s.meta.dtsg)
 	form.Set("ttstamp", s.meta.ttstamp)
 	return form

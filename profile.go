@@ -31,6 +31,7 @@ func (s *Session) UserProfileInfo(userID string) (UserProfile, error) {
 	req, _ := http.NewRequest(http.MethodPost, profileURL,
 		strings.NewReader(form.Encode()))
 	req.Header = defaultHeader()
+	req.Header.Set("Content-Type", formURLEncoded)
 
 	resp, err := s.doRequest(req)
 	if err != nil {

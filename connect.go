@@ -79,10 +79,10 @@ func (s *Session) ConnectToChat() error {
 		return err
 	}
 
-	err = s.connectToStage3()
-	if err != nil {
-		return err
-	}
+	// err = s.connectToStage3()
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
