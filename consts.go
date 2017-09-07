@@ -21,7 +21,7 @@ const (
 	syncURL        = "https://www.facebook.com/notifications/sync/?"
 	profileURL     = "https://www.facebook.com/chat/user_info/"
 	allProfileURL  = "https://www.facebook.com/chat/user_info_all"
-	userAgent      = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36"
+	userAgent      = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
 	formURLEncoded = "application/x-www-form-urlencoded"
 	loggedOutError = 1357001
 )
